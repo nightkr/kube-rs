@@ -2,7 +2,7 @@
 //!
 //! For concrete usage see [examples prefixed with dynamic_](https://github.com/kube-rs/kube/tree/main/examples).
 
-pub use crate::discovery::ApiResource;
+pub use crate::discovery::{ApiResource, ApiResourceCore};
 use crate::{metadata::TypeMeta, resource::Resource, scope::DynamicResourceScope};
 use k8s_openapi::apimachinery::pkg::apis::meta::v1::ObjectMeta;
 use std::borrow::Cow;
@@ -27,7 +27,7 @@ pub struct DynamicObject {
 impl DynamicObject {
     /// Create a DynamicObject with minimal values set from ApiResource.
     #[must_use]
-    pub fn new(name: &str, resource: &ApiResource) -> Self {
+    pub fn new(name: &str, resource: &ApiResourceCore) -> Self {
         Self {
             types: Some(TypeMeta {
                 api_version: resource.api_version.to_string(),
@@ -57,26 +57,26 @@ impl DynamicObject {
 }
 
 impl Resource for DynamicObject {
-    type DynamicType = ApiResource;
+    type DynamicType = ApiResourceCore;
     type Scope = DynamicResourceScope;
 
-    fn group(dt: &ApiResource) -> Cow<'_, str> {
+    fn group(dt: &ApiResourceCore) -> Cow<'_, str> {
         dt.group.as_str().into()
     }
 
-    fn version(dt: &ApiResource) -> Cow<'_, str> {
+    fn version(dt: &ApiResourceCore) -> Cow<'_, str> {
         dt.version.as_str().into()
     }
 
-    fn kind(dt: &ApiResource) -> Cow<'_, str> {
+    fn kind(dt: &ApiResourceCore) -> Cow<'_, str> {
         dt.kind.as_str().into()
     }
 
-    fn api_version(dt: &ApiResource) -> Cow<'_, str> {
+    fn api_version(dt: &ApiResourceCore) -> Cow<'_, str> {
         dt.api_version.as_str().into()
     }
 
-    fn plural(dt: &ApiResource) -> Cow<'_, str> {
+    fn plural(dt: &ApiResourceCore) -> Cow<'_, str> {
         dt.plural.as_str().into()
     }
 
@@ -88,8 +88,8 @@ impl Resource for DynamicObject {
         &mut self.metadata
     }
 
-    fn is_namespaced(dt: &ApiResource) -> bool {
-        dt.capabilities.namespaced
+    fn is_namespaced(dt: &ApiResourceCore) -> bool {
+        dt.namespaced
     }
 }
 

@@ -458,7 +458,10 @@ pub(crate) fn derive(input: proc_macro2::TokenStream) -> proc_macro2::TokenStrea
 
             fn api_resource() -> #kube_core::ApiResource {
                 // TODO: populate subresources
-                #kube_core::ApiResource::erase::<Self>(&())
+                #kube_core::ApiResource {
+                    core: #kube_core::ApiResource::erase::<Self>(&()),
+                    capabilities: Default::default(),
+                }
                     .set_shortnames(#shortnames_slice).set_default_verbs()
 
             }

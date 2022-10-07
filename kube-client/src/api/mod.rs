@@ -25,7 +25,7 @@ pub mod entry;
 pub use kube_core::admission;
 pub(crate) use kube_core::params;
 pub use kube_core::{
-    dynamic::{ApiResource, DynamicObject},
+    dynamic::{ApiResource, ApiResourceCore, DynamicObject},
     gvk::{GroupVersionKind, GroupVersionResource},
     metadata::{ListMeta, ObjectMeta, TypeMeta},
     object::{NotUsed, Object, ObjectList},

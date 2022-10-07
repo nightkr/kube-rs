@@ -1,6 +1,6 @@
 //! Generic object and objectlist wrappers.
 use crate::{
-    discovery::ApiResource,
+    discovery::{ApiResource, ApiResourceCore},
     metadata::{ListMeta, ObjectMeta, TypeMeta},
     resource::Resource,
     scope::DynamicResourceScope,
@@ -216,26 +216,26 @@ where
     P: Clone,
     U: Clone,
 {
-    type DynamicType = ApiResource;
+    type DynamicType = ApiResourceCore;
     type Scope = DynamicResourceScope;
 
-    fn group(dt: &ApiResource) -> Cow<'_, str> {
+    fn group(dt: &ApiResourceCore) -> Cow<'_, str> {
         dt.group.as_str().into()
     }
 
-    fn version(dt: &ApiResource) -> Cow<'_, str> {
+    fn version(dt: &ApiResourceCore) -> Cow<'_, str> {
         dt.version.as_str().into()
     }
 
-    fn kind(dt: &ApiResource) -> Cow<'_, str> {
+    fn kind(dt: &ApiResourceCore) -> Cow<'_, str> {
         dt.kind.as_str().into()
     }
 
-    fn plural(dt: &ApiResource) -> Cow<'_, str> {
+    fn plural(dt: &ApiResourceCore) -> Cow<'_, str> {
         dt.plural.as_str().into()
     }
 
-    fn api_version(dt: &ApiResource) -> Cow<'_, str> {
+    fn api_version(dt: &ApiResourceCore) -> Cow<'_, str> {
         dt.api_version.as_str().into()
     }
 
@@ -247,8 +247,8 @@ where
         &mut self.metadata
     }
 
-    fn is_namespaced(dt: &ApiResource) -> bool {
-        dt.capabilities.namespaced
+    fn is_namespaced(dt: &ApiResourceCore) -> bool {
+        dt.namespaced
     }
 }
 

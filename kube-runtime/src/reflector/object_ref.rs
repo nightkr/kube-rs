@@ -159,7 +159,7 @@ impl<K: Resource> ObjectRef<K> {
 
     pub fn erase(self) -> ObjectRef<DynamicObject> {
         ObjectRef {
-            dyntype: kube_client::api::ApiResource::erase::<K>(&self.dyntype),
+            dyntype: kube_client::api::ApiResourceCore::erase::<K>(&self.dyntype),
             name: self.name,
             namespace: self.namespace,
             extra: self.extra,

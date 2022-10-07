@@ -188,6 +188,7 @@ mod test {
         api::{DeleteParams, Patch, PatchParams},
         Api, Client, CustomResourceExt, Resource, ResourceExt,
     };
+    use kube_client::api::ApiResourceCore;
     use kube_derive::CustomResource;
     use schemars::JsonSchema;
     use serde::{Deserialize, Serialize};
@@ -359,6 +360,8 @@ mod test {
     #[ignore] // needs cluster (fetches api resources, and lists all)
     #[cfg(all(feature = "derive"))]
     async fn derived_resources_discoverable() -> Result<(), Box<dyn std::error::Error>> {
+        use std::ops::Deref;
+
         use crate::{
             core::{DynamicObject, GroupVersion, GroupVersionKind},
             discovery::{self, verbs, ApiGroup, Discovery},
@@ -418,9 +421,11 @@ mod test {
                     continue;
                 }
                 let api: Api<DynamicObject> = if ar.namespaced() {
-                    Api::default_namespaced_with(client.clone(), &ar)
+                    // Looks like deref coercion doesn't play nice with inference, either we need to reborrow explicitly (with &*)
+                    Api::default_namespaced_with(client.clone(), &*ar)
                 } else {
-                    Api::all_with(client.clone(), &ar)
+                    // Or specify the type.. :(
+                    Api::<DynamicObject>::all_with(client.clone(), &ar)
                 };
                 api.list(&Default::default()).await?;
             }
